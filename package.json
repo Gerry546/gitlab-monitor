@@ -1,6 +1,9 @@
 {
   "name": "gitlab-monitor",
-  "version": "0.0.0",
+  "description": "A browser-based monitor dashboard for GitLab CI",
+  "version": "1.0.1",
+  "author": "Tom Geelen <t.f.g.geelen@gmail.com>",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "scripts": {
