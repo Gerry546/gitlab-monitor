@@ -13,7 +13,8 @@
 			"extensions": [
 				"Vue.volar",
 				"mhutchie.git-graph",
-				"ms-vscode.js-debug-nightly"
+				"ms-vscode.js-debug-nightly",
+				"Tobermory.es6-string-html"
 			]
 		}
 	},
