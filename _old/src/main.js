@@ -1,15 +1,15 @@
 import 'regenerator-runtime/runtime'
-import Vue from 'vue'
+// import Vue from 'vue'
 import VueTimeago from 'vue-timeago'
-import App from './components/app.vue'
-import Config from './Config'
-import {configureApi} from './GitLabApi'
-import axios from 'axios'
+// import App from './components/app.vue'
+// import Config from './Config'
+// import {configureApi} from './GitLabApi'
+// import axios from 'axios'
 
-const finish = () => {
-  if (Config.isConfigured) {
-    configureApi()
-  }
+// const finish = () => {
+//   if (Config.isConfigured) {
+//     configureApi()
+//   }
 
   Vue.use(VueTimeago, {
     name: 'timeago', // component name, `timeago` by default
@@ -23,16 +23,16 @@ const finish = () => {
     el: '#app',
     render: h => h(App)
   })
-}
+// }
 
-// Load bundled config, if present.
-;(async () => {
-  try {
-    const {data} = await axios.get('./config.json')
-    Config.load(data)
-  } catch (e) {
-    Config.load()
-  } finally {
-    finish()
-  }
-})()
+// // Load bundled config, if present.
+// ;(async () => {
+//   try {
+//     const {data} = await axios.get('./config.json')
+//     Config.load(data)
+//   } catch (e) {
+//     Config.load()
+//   } finally {
+//     finish()
+//   }
+// })()

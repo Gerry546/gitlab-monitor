@@ -1,4 +1,5 @@
 import Config from "../components/configuration/Config"
+import axios  from 'axios'
 
 export default {
     install: (app, options) => {

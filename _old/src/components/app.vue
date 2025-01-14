@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="app">
     <template v-if="loaded && configured">
       <div ref="content" class="content" :style="{zoom}">
@@ -43,7 +43,7 @@
       <octicon name="sync" spin scale="3" />
     </div>
   </div>
-</template>
+</template> -->
 
 <script>
   import Octicon from 'vue-octicon/components/Octicon'
@@ -51,7 +51,7 @@
   import { configureApi } from '@/GitLabApi'
   import ProjectCard from './project-card'
   import RunnerStatus from './runner-status'
-  import YAML from 'yaml'
+  // import YAML from 'yaml'
   import Visibilty from 'visibilityjs'
   import MonacoEditor from 'vue-monaco'
 
@@ -62,24 +62,24 @@
       RunnerStatus,
       MonacoEditor
     },
-    name: 'app',
-    data: () => ({
-      projects: [],
-      zoom: 1,
-      loaded: false,
-      configured: false,
-      config: '',
-      styleOverride: '',
-      editCustomStyles: false,
-      monacoOptions: {
-        theme: 'vs-dark',
-        tabSize: 2,
-        minimap: {
-          enabled: false
-        },
-        scrollBeyondLastLine: false
-      }
-    }),
+    // name: 'app',
+    // data: () => ({
+    //   projects: [],
+    //   zoom: 1,
+    //   loaded: false,
+    //   configured: false,
+    //   config: '',
+    //   styleOverride: '',
+    //   editCustomStyles: false,
+    //   monacoOptions: {
+    //     theme: 'vs-dark',
+    //     tabSize: 2,
+    //     minimap: {
+    //       enabled: false
+    //     },
+    //     scrollBeyondLastLine: false
+    //   }
+    // }),
     computed: {
       sortedProjects() {
         const sortMethods = {
@@ -107,19 +107,19 @@
 
         return this.projects.sort(byMethod)
       },
-      configIsValid() {
-        try {
-          YAML.parse(this.config)
-        } catch (e) {
-          return false
-        }
+      // configIsValid() {
+      //   try {
+      //     YAML.parse(this.config)
+      //   } catch (e) {
+      //     return false
+      //   }
 
-        return true
-      },
+      //   return true
+      // },
     },
-    beforeMount() {
-      this.reloadConfig()
-    },
+    // beforeMount() {
+    //   this.reloadConfig()
+    // },
     beforeDestroy() {
       this.stopInterval(this.refreshIntervalId)
     },
@@ -238,80 +238,80 @@
 
         if (step > 0) this.zoom -= step
       },
-      reloadConfig() {
-        this.$forceUpdate()
+      // reloadConfig() {
+      //   this.$forceUpdate()
 
-        if (!this.configured && Config.isConfigured) {
-          configureApi()
+      //   if (!this.configured && Config.isConfigured) {
+      //     configureApi()
 
-          this.loaded = false
-          this.projects = []
-          this.fetchProjects()
+      //     this.loaded = false
+      //     this.projects = []
+      //     this.fetchProjects()
 
-          if (Config.root.autoZoom) {
-            if (this.autoZoomIntervalId) {
-              clearInterval(this.autoZoomIntervalId)
-            }
+      //     if (Config.root.autoZoom) {
+      //       if (this.autoZoomIntervalId) {
+      //         clearInterval(this.autoZoomIntervalId)
+      //       }
 
-            this.autoZoomIntervalId = setInterval(() => {
-              this.autoZoom()
-            }, 5000)
-          }
+      //       this.autoZoomIntervalId = setInterval(() => {
+      //         this.autoZoom()
+      //       }, 5000)
+      //     }
 
-          if (this.refreshIntervalId) {
-            this.stopInterval(this.refreshIntervalId)
-          }
+      //     if (this.refreshIntervalId) {
+      //       this.stopInterval(this.refreshIntervalId)
+      //     }
 
-          const twoMinutes = 2 * 60 * 1000
+      //     const twoMinutes = 2 * 60 * 1000
 
-          if (Config.root.backgroundRefresh) {
-            this.enableInterval = (t, f) => setInterval(f, t)
-            this.stopInterval = (i) => clearInterval(i)
-          } else {
-            this.enableInterval = Visibilty.every
-            this.stopInterval = Visibilty.stop
-          }
+      //     if (Config.root.backgroundRefresh) {
+      //       this.enableInterval = (t, f) => setInterval(f, t)
+      //       this.stopInterval = (i) => clearInterval(i)
+      //     } else {
+      //       this.enableInterval = Visibilty.every
+      //       this.stopInterval = Visibilty.stop
+      //     }
 
-          this.refreshIntervalId = this.enableInterval(
-            twoMinutes * Config.root.pollingIntervalMultiplier,
-            async () => {
-              if (!this.loading) {
-                await this.fetchProjects()
-              }
-            }
-          )
+      //     this.refreshIntervalId = this.enableInterval(
+      //       twoMinutes * Config.root.pollingIntervalMultiplier,
+      //       async () => {
+      //         if (!this.loading) {
+      //           await this.fetchProjects()
+      //         }
+      //       }
+      //     )
 
-          // https://webpack.js.org/loaders/style-loader/#lazystyletag
-          this.themeStyles?.unuse()
+      //     // https://webpack.js.org/loaders/style-loader/#lazystyletag
+      //     this.themeStyles?.unuse()
 
-          if (Config.root.theme) {
-            document.documentElement.classList.value = Config.root.theme
-            this.themeStyles =
-              require('!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../themes/' + Config.root.theme + '.theme.scss')
-            this.themeStyles.use()
-          }
-        }
+      //     if (Config.root.theme) {
+      //       document.documentElement.classList.value = Config.root.theme
+      //       this.themeStyles =
+      //         require('!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../themes/' + Config.root.theme + '.theme.scss')
+      //       this.themeStyles.use()
+      //     }
+      //   }
 
-        this.configured = Config.isConfigured
+      //   this.configured = Config.isConfigured
 
-        if (this.configured) {
-          this.config = YAML.stringify(Config.local, null, 2)
-        } else {
-          this.config = YAML.stringify(require('../config.template'), null, 2)
-        }
+      //   if (this.configured) {
+      //     this.config = YAML.stringify(Config.local, null, 2)
+      //   } else {
+      //     this.config = YAML.stringify(require('../config.template'), null, 2)
+      //   }
 
-        this.styleOverride = Config.style
-        this.editCustomStyles = this.styleOverride.trim() !== '';
+      //   this.styleOverride = Config.style
+      //   this.editCustomStyles = this.styleOverride.trim() !== '';
 
-        let styleOverrideElement = document.getElementById('style-override')
-        if (styleOverrideElement !== null) {
-          styleOverrideElement.remove()
-        }
-        styleOverrideElement = document.createElement('style')
-        styleOverrideElement.id = 'style-override'
-        styleOverrideElement.appendChild(document.createTextNode(Config.style))
-        document.head.appendChild(styleOverrideElement)
-      },
+      //   let styleOverrideElement = document.getElementById('style-override')
+      //   if (styleOverrideElement !== null) {
+      //     styleOverrideElement.remove()
+      //   }
+      //   styleOverrideElement = document.createElement('style')
+      //   styleOverrideElement.id = 'style-override'
+      //   styleOverrideElement.appendChild(document.createTextNode(Config.style))
+      //   document.head.appendChild(styleOverrideElement)
+      // },
       saveConfig() {
         Config.load(YAML.parse(this.config), this.styleOverride)
         this.reloadConfig()
@@ -325,7 +325,7 @@
     }
   }
 </script>
-
+<!-- 
 <style lang="scss">
   :root {
     --background-color: #212121;
@@ -460,4 +460,4 @@
       }
     }
   }
-</style>
+</style> -->

@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import Config from './components/configuration/Config'
 import GitlabApi from './plugins/GitlabApi'
+import axios from 'axios'
 
 (async () => {
     try {

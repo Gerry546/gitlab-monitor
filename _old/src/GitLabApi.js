@@ -1,19 +1,19 @@
-import axios  from 'axios'
+// import axios  from 'axios'
 import parse  from 'parse-link-header'
-import Vue    from 'vue'
-import Config from './Config'
+// import Vue    from 'vue'
+// import Config from './Config'
 
-const GitLabApi = {}
+// const GitLabApi = {}
 
-GitLabApi.install = (Vue, options) => {
-  Vue.prototype.$api = async (path, params = {}, behaviour = {}, method = 'GET') => {
-    const response = await axios(path, {
-      baseURL: Config.root.gitlabApi,
-      method: method,
-      params,
-      headers: { 'Private-Token': Config.root.privateToken }
-    })
-    const result = response.data
+// GitLabApi.install = (Vue, options) => {
+  // Vue.prototype.$api = async (path, params = {}, behaviour = {}, method = 'GET') => {
+  //   const response = await axios(path, {
+  //     baseURL: Config.root.gitlabApi,
+  //     method: method,
+  //     params,
+  //     headers: { 'Private-Token': Config.root.privateToken }
+  //   })
+  //   const result = response.data
     if (behaviour.follow_next_page_links) {
       // Find the "next" link header and follow it, until we get a result that has no next link
       let parsedLinks = parse(response.headers.link)
@@ -25,11 +25,11 @@ GitLabApi.install = (Vue, options) => {
         parsedLinks = parse(nextResponse.headers.link)
       }
     }
-    return result
-  }
-}
+//     return result
+//   }
+// }
 
-export default GitLabApi
+// export default GitLabApi
 
 export function configureApi() {
   Vue.use(GitLabApi, {
