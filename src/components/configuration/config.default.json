@@ -1,0 +1,59 @@
+{
+  "gitlabApi": "https://gitlab.example.com/api/v4",
+  "privateToken": "ABCDEF123456",
+  "maxAge": 168,
+  "fetchCount": 20,
+  "pipelinesOnly": false,
+  "includeArchived": false,
+  "autoZoom": false,
+  "showPipelineIds": true,
+  "showProjectOnlyOn": [],
+  "showJobs": "icon",
+  "showJobsNameOnlyOn": [],
+  "showRestartedJobs": true,
+  "showStagesNames": false,
+  "showDurations": true,
+  "showCoverage": false,
+  "showTestReport": false,
+  "showUsers": false,
+  "showRerunButton": false,
+  "title": null,
+  "orderBy": "lastActivity",
+  "orderByDesc": false,
+  "pollingIntervalMultiplier": 1.0,
+  "backgroundRefresh": true,
+  "projectVisibility": "any",
+  "membership": false,
+  "badges": false,
+  "showRunnerStatus": true,
+  "filter": {
+    "include": ".*",
+    "includeTags": ".*",
+    "exclude": null,
+    "excludeTags": null,
+    "excludeUntagged": false
+  },
+  "projectConfig": {
+    "*": {
+      "include": ".*",
+      "exclude": null,
+      "default": null,
+      "showMerged": true,
+      "showTags": true,
+      "showLatestTagOnly": false,
+      "showDetached": false,
+      "showLabels": true,
+      "historyCount": 1,
+      "hideSkippedPipelines": false,
+      "hideSuccessfulPipelines": false,
+      "soundAlerts": {
+        "soundUrl": null,
+        "include": ".*",
+        "exclude": null
+      }
+    }
+  },
+  "projectScope": null,
+  "projectScopeId": null,
+  "theme": null
+}
