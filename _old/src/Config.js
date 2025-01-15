@@ -51,13 +51,13 @@ export default new class Config {
     window.localStorage.setItem('styleOverride', this.styleOverride)
   }
 
-  get isConfigured() {
-    return this.config !== null
-  }
+  // get isConfigured() {
+  //   return this.config !== null
+  // }
 
-  get root() {
-    return this.config
-  }
+  // get root() {
+  //   return this.config
+  // }
 
   get local() {
     return this.localConfig

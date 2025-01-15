@@ -1,13 +1,16 @@
 <script setup>
-import { computed, onBeforeMount, ref } from 'vue';
+import { computed, onBeforeMount, onBeforeUnmount, ref } from 'vue';
 import YAML from 'yaml';
+import Config from './components/configuration/Config';
+
+let refreshIntervalId = null;
 
 const name = ref('app');
-// const projects = ref([]);
+const projects = ref([]);
 const zoom = ref(1);
 const loaded = ref(false);
-const configured = ref(false);
-const config = ref('');
+let configured = ref(false);
+let config = ref('');
 // const styleOverride = ref('');
 const editCustomStyles = ref(false);
 // const monacoOptions = {
@@ -18,7 +21,9 @@ const editCustomStyles = ref(false);
 //     },
 //     scrollBeyondLastLine: false
 // };
+
 const configIsValid = computed(() => {
+    console.log('configIsValid');
     try {
         YAML.parse(config.value);
         return true;
@@ -27,83 +32,91 @@ const configIsValid = computed(() => {
     }
 });
 
-// onBeforeMount(() => {
-//     if (!configured.value && Config.isConfigured) {
-//         configureApi()
+onBeforeMount(() => {
+    console.log('onBeforeMount');
+    reloadConfig();
+});
 
-        //     loaded.value = false
-        //     // projects.value = []
-        //     fetchProjects()
+onBeforeUnmount(() => {
+    console.log('onBeforeUnmount');
+    stopInterval(refreshIntervalId);
+});
 
-        //     if (Config.root.autoZoom) {
-        //         if (autoZoomIntervalId) {
-        //                 clearInterval(autoZoomIntervalId)
-        //             }
+function reloadConfig() {
+    console.log('reloadConfig');
+    const twoMinutes = 2 * 60 * 100
+    let enableInterval;
+    let stopInterval;
 
-        //             autoZoomIntervalId = setInterval(() => {
-        //                 autoZoom()
-        //         }, 5000)
-        //     }
+    if (!configured && Config.isServerConfigured) {
+        loaded = false;
+        projects = [];
+        fetchProjects();
 
-        //     if (refreshIntervalId) {
-        //         stopInterval(refreshIntervalId)
-        //     }
+        if (Config.root.autoZoom) {
+            if (autoZoomIntervalId) {
+                clearInterval(autoZoomIntervalId)
+            }
 
-        //     const twoMinutes = 2 * 60 * 1000
+            autoZoomIntervalId = setInterval(() => {
+                autoZoom()
+            }, 5000)
+        }
 
-        //     if (Config.root.backgroundRefresh) {
-        //         this.enableInterval = (t, f) => setInterval(f, t)
-        //         this.stopInterval = (i) => clearInterval(i)
-        //     } else {
-        //         this.enableInterval = Visibilty.every
-        //         this.stopInterval = Visibilty.stop
-        //     }
+        if (refreshIntervalId) {
+            stopInterval(refreshIntervalId);
+        }
 
-        //     refreshIntervalId = enableInterval(
-        //         twoMinutes * Config.root.pollingIntervalMultiplier,
-        //         async () => {
-        //             if (!this.loading) {
-        //                 await this.fetchProjects()
-        //             }
-        //         }
-        //     )
+        if (Config.root.backgroundRefresh) {
+            enableInterval = (t, f) => setInterval(f, t);
+            stopInterval = (i) => clearInterval(i);
+        } else {
+            enableInterval = Visibilty.every;
+            stopInterval = Visibilty.stop;
+        }
 
-        //     // https://webpack.js.org/loaders/style-loader/#lazystyletag
-        //     themeStyles?.unuse()
+        refreshIntervalId = enableInterval(
+            twoMinutes * Config.root.pollingIntervalMultiplier,
+            async () => {
+                if (!loaded) {
+                    await fetchProjects()
+                }
+            }
+        )
+    }
 
-        //     if (Config.root.theme) {
-        //         document.documentElement.classList.value = Config.root.theme
-        //         themeStyles =
-        //             require('!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../themes/' + Config.root.theme + '.theme.scss')
-        //         this.themeStyles.use()
-        //     }
-        // }
+    configured = Config.isServerConfigured;
 
-        // configured.value = Config.isConfigured
+    if (configured) {
+        config = YAML.stringify(Config.local, null, 2)
+    } else {
+        config = YAML.stringify(require('../config.template'), null, 2)
+    }
+}
 
-        // if (configured.value) {
-        //     config.value = YAML.stringify(Config.local, null, 2)
-        // } else {
-        //     config.value = YAML.stringify(require('../config.template'), null, 2)
-        // }
+function stopInterval(intervalId) {
+    console.log('stopInterval');
+    clearInterval(intervalId);
+}
 
-        // // styleOverride.value = Config.style
-        // editCustomStyles.value = Config.style.trim() !== '';
+async function fetchProjects() {
+    console.log('fetchProjects');
+}
 
-        // let styleOverrideElement = document.getElementById('style-override');
-        // if (styleOverrideElement !== null) {
-        //     styleOverrideElement.remove()
-        // }
-        // styleOverrideElement = document.createElement('style')
-        // styleOverrideElement.id = 'style-override'
-        // styleOverrideElement.appendChild(document.createTextNode(Config.style))
-        // document.head.appendChild(styleOverrideElement)
-//     }
-// });
+function saveConfig() {
+    console.log('saveConfig');
+    Config.load(YAML.parse(config), styleOverride);
+    reloadConfig();
+}
 
-// BeforeUnloadEvent(() => {
-//     this.stopInterval(refreshIntervalId)
-// });
+function getTitle() {
+    return Config.root.title || null
+}
+
+function showRunnerStatus() {
+    return Config.root.showRunnerStatus
+}
+
 </script>
 
 <template>

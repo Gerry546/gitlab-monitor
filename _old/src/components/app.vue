@@ -47,7 +47,7 @@
 
 <script>
   import Octicon from 'vue-octicon/components/Octicon'
-  import Config from '../Config'
+  // import Config from '../Config'
   import { configureApi } from '@/GitLabApi'
   import ProjectCard from './project-card'
   import RunnerStatus from './runner-status'
@@ -120,9 +120,9 @@
     // beforeMount() {
     //   this.reloadConfig()
     // },
-    beforeDestroy() {
-      this.stopInterval(this.refreshIntervalId)
-    },
+    // beforeDestroy() {
+    //   this.stopInterval(this.refreshIntervalId)
+    // },
     methods: {
       async fetchProjects() {
         const fetchCount = Config.root.fetchCount
@@ -239,89 +239,89 @@
         if (step > 0) this.zoom -= step
       },
       // reloadConfig() {
-      //   this.$forceUpdate()
+        this.$forceUpdate()
 
-      //   if (!this.configured && Config.isConfigured) {
-      //     configureApi()
+        // if (!this.configured && Config.isConfigured) {
+        //   configureApi()
 
-      //     this.loaded = false
-      //     this.projects = []
-      //     this.fetchProjects()
+        //   this.loaded = false
+        //   this.projects = []
+        //   this.fetchProjects()
 
-      //     if (Config.root.autoZoom) {
-      //       if (this.autoZoomIntervalId) {
-      //         clearInterval(this.autoZoomIntervalId)
-      //       }
+        //   if (Config.root.autoZoom) {
+        //     if (this.autoZoomIntervalId) {
+        //       clearInterval(this.autoZoomIntervalId)
+        //     }
 
-      //       this.autoZoomIntervalId = setInterval(() => {
-      //         this.autoZoom()
-      //       }, 5000)
-      //     }
+        //     this.autoZoomIntervalId = setInterval(() => {
+        //       this.autoZoom()
+        //     }, 5000)
+        //   }
 
-      //     if (this.refreshIntervalId) {
-      //       this.stopInterval(this.refreshIntervalId)
-      //     }
+        //   if (this.refreshIntervalId) {
+        //     this.stopInterval(this.refreshIntervalId)
+        //   }
 
-      //     const twoMinutes = 2 * 60 * 1000
+        //   const twoMinutes = 2 * 60 * 1000
 
-      //     if (Config.root.backgroundRefresh) {
-      //       this.enableInterval = (t, f) => setInterval(f, t)
-      //       this.stopInterval = (i) => clearInterval(i)
-      //     } else {
-      //       this.enableInterval = Visibilty.every
-      //       this.stopInterval = Visibilty.stop
-      //     }
+        //   if (Config.root.backgroundRefresh) {
+        //     this.enableInterval = (t, f) => setInterval(f, t)
+        //     this.stopInterval = (i) => clearInterval(i)
+        //   } else {
+        //     this.enableInterval = Visibilty.every
+        //     this.stopInterval = Visibilty.stop
+        //   }
 
-      //     this.refreshIntervalId = this.enableInterval(
-      //       twoMinutes * Config.root.pollingIntervalMultiplier,
-      //       async () => {
-      //         if (!this.loading) {
-      //           await this.fetchProjects()
-      //         }
-      //       }
-      //     )
+        //   this.refreshIntervalId = this.enableInterval(
+        //     twoMinutes * Config.root.pollingIntervalMultiplier,
+        //     async () => {
+        //       if (!this.loading) {
+        //         await this.fetchProjects()
+        //       }
+        //     }
+        //   )
 
-      //     // https://webpack.js.org/loaders/style-loader/#lazystyletag
-      //     this.themeStyles?.unuse()
+          // https://webpack.js.org/loaders/style-loader/#lazystyletag
+          this.themeStyles?.unuse()
 
-      //     if (Config.root.theme) {
-      //       document.documentElement.classList.value = Config.root.theme
-      //       this.themeStyles =
-      //         require('!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../themes/' + Config.root.theme + '.theme.scss')
-      //       this.themeStyles.use()
-      //     }
-      //   }
+          if (Config.root.theme) {
+            document.documentElement.classList.value = Config.root.theme
+            this.themeStyles =
+              require('!!style-loader?injectType=lazyStyleTag!css-loader!sass-loader!../themes/' + Config.root.theme + '.theme.scss')
+            this.themeStyles.use()
+          }
+        // }
 
-      //   this.configured = Config.isConfigured
+        // this.configured = Config.isConfigured
 
-      //   if (this.configured) {
-      //     this.config = YAML.stringify(Config.local, null, 2)
-      //   } else {
-      //     this.config = YAML.stringify(require('../config.template'), null, 2)
-      //   }
+        if (this.configured) {
+          this.config = YAML.stringify(Config.local, null, 2)
+        } else {
+          this.config = YAML.stringify(require('../config.template'), null, 2)
+        }
 
-      //   this.styleOverride = Config.style
-      //   this.editCustomStyles = this.styleOverride.trim() !== '';
+        this.styleOverride = Config.style
+        this.editCustomStyles = this.styleOverride.trim() !== '';
 
-      //   let styleOverrideElement = document.getElementById('style-override')
-      //   if (styleOverrideElement !== null) {
-      //     styleOverrideElement.remove()
-      //   }
-      //   styleOverrideElement = document.createElement('style')
-      //   styleOverrideElement.id = 'style-override'
-      //   styleOverrideElement.appendChild(document.createTextNode(Config.style))
-      //   document.head.appendChild(styleOverrideElement)
+        let styleOverrideElement = document.getElementById('style-override')
+        if (styleOverrideElement !== null) {
+          styleOverrideElement.remove()
+        }
+        styleOverrideElement = document.createElement('style')
+        styleOverrideElement.id = 'style-override'
+        styleOverrideElement.appendChild(document.createTextNode(Config.style))
+        document.head.appendChild(styleOverrideElement)
+      },
+      // saveConfig() {
+      //   Config.load(YAML.parse(this.config), this.styleOverride)
+      //   this.reloadConfig()
       // },
-      saveConfig() {
-        Config.load(YAML.parse(this.config), this.styleOverride)
-        this.reloadConfig()
-      },
-      getTitle() {
-        return Config.root.title || null
-      },
-      showRunnerStatus() {
-        return Config.root.showRunnerStatus
-      }
+      // getTitle() {
+      //   return Config.root.title || null
+      // },
+      // showRunnerStatus() {
+      //   return Config.root.showRunnerStatus
+      // }
     }
   }
 </script>
